@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////////
 // ------------------------------------------------------------------------------ //
 //                           OpenNCUpdater - Master                               //
 //                                 version 3.950                                  //
@@ -99,11 +99,13 @@ SetBundleStatus(string bundlename, string status)
 {// find the bundle in the list
     integer n;
     integer stop = llGetListLength(lBundles);
-    for (n = 0; n < stop; n += 2) {
+    for (n = 0; n < stop; n += 2) 
+    {
         string card = llList2String(lBundles, n);
         list parts = llParseString2List(card, ["_"], []);
         string name = llList2String(parts, 2);
-        if (name == bundlename) {
+        if (name == bundlename) 
+        {
             lBundles = llListReplaceList(lBundles, [status], n + 1, n + 1);
             return;
         }
@@ -179,10 +181,10 @@ BundleMenu(integer page)
         {
             choices += [BTN_UNINSTALL + " " + name];
         } 
-        else if (status == "DEPRECATED") 
-        {
-            choices += [BTN_DEPRECATED + " " + name];
-        }
+//        else if (status == "DEPRECATED") 
+//        {
+//            choices += [BTN_DEPRECATED + " " + name];
+//        }
     }
     kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["START"], page);
 }
