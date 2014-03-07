@@ -1,0 +1,20 @@
+ITEM|OpenNC - _control  - 3.950
+ITEM|OpenNC - _control  - 3.951 stay/slow
+SCRIPT|OpenNC - appearance cuff 3.951
+SCRIPT|OpenNC - appearance cuff 3.950
+ITEM|OpenNC - arms - 3.950
+ITEM|OpenNC - armCuff  - 3.950
+ITEM|OpenNC - auth - 3.950
+SCRIPT|OpenNC - color cuff  3.950
+SCRIPT|OpenNC - dialog cuff 3.952
+SCRIPT|OpenNC - hide cuff 3.950
+ITEM|OpenNC - legs - 3.950
+SCRIPT|OpenNC - listener cuff 3.950
+SCRIPT|OpenNC - lock cuff  3.950
+SCRIPT|OpenNC - menu cuff 3.950
+SCRIPT|OpenNC - rlvmain cuff 3.950
+SCRIPT|OpenNC - settings cuff 3.950
+SCRIPT|OpenNC - texture cuff 3.950
+SCRIPT|OpenNC - timer cuff 3.950
+ITEM|OpenNC - Tail - 3.950
+ITEM|OpenNC - wings - 3.950

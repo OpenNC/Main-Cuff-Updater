@@ -1,0 +1,54 @@
+ITEM|OpenCollar - appearance cuffs 3.333 - 1.335
+ITEM|OpenCollar - auth 3.382 - 1.380
+ITEM|OpenCollar - auth - 3.532
+ITEM|OpenCollar - color cuffs 3.342 - 1.337
+ITEM|OpenCollar - dialog 3.338 - 1.380
+ITEM|OpenCollar - dialog 3.338 - 1.385
+ITEM|OpenCollar - keyholder plugin - 3.537
+ITEM|OpenCollar - lock cuffs 3.381 - 1.380
+ITEM|OpenCollar - lock cuffs 3.381 - 1.381
+ITEM|OpenCollar - lock cuffs 3.381 - 1.385
+ITEM|OpenCollar - menu cuffs 3.331 - 1.335
+ITEM|OpenCollar - rlvmain 3.343 - 1.383
+SCRIPT|OpenCollar - rlvmain cuffs 3.700
+SCRIPT|OpenCollar - settings
+ITEM|OpenCollar - settings cuffs 3.344 - 1.386
+ITEM|OpenCollar - settings 3.706
+ITEM|OpenCollar - texture cuffs 3.342 - 1.337
+ITEM|OpenCollar - timer cuffs 3.339 - 1.381
+ITEM|OpenCollar - timer - cuffs 3.586
+ITEM|OpenCollar - update 2.301 - 1.337
+ITEM|OpenCuffs - AOSwitch - 1.380
+ITEM|OpenCuffs - AOSwitch - 1.386
+ITEM|OpenCuffs - AOSwitch - 1.387
+ITEM|OpenCuffs - _anim  - 1.335
+ITEM|OpenCuffs - _func - 1.335
+ITEM|OpenCuffs - _listen  - 1.335
+ITEM|OpenCuffs - _listen  -3.701
+ITEM|OpenCuffs - armCuff  - 1.380
+ITEM|OpenCuffs - armCuff  - 1.420
+ITEM|OpenCuffs - arms - 1.335
+ITEM|OpenCuffs - arms - 1.335WD
+ITEM|OpenCuffs - collar command parser - 1.336
+ITEM|OpenCuffs - collar command parser - 3.701
+ITEM|OpenCuffs - legs - 1.335
+ITEM|OpenCuffs - legs - 1.335WD
+ITEM|OpenCuffs - LockGuard V2 Listener  - 1.335
+ITEM|OpenCollar - appearance modded- 3.201
+ITEM|OpenCollar - auth - 3.201
+ITEM|OpenCollar - color modded - 3.200a
+ITEM|OpenCollar - httpdb - 3.200
+ITEM|OpenCollar - lock modded - 3.200a
+ITEM|OpenCollar - menu modded - 3.200
+ITEM|OpenCollar - rlvmain - 3.200
+ITEM|OpenCollar - texture modded - 3.200a
+ITEM|OpenCollar - update 2.301
+ITEM|OpenCuffs - _anim - 1.005
+ITEM|OpenCuffs - _func - 1.005
+ITEM|OpenCuffs - _listen - 1.005
+ITEM|OpenCuffs - AOSwitch - 1.002
+ITEM|OpenCuffs - armCuff - 1.009
+ITEM|OpenCuffs - arms - 1.011
+ITEM|OpenCuffs - collar command parser - 3.011
+ITEM|OpenCuffs - legs - 1.011
+ITEM|OpenCuffs - LockGuard V2 Listener - 1.001
