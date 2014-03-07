@@ -1,4 +1,5 @@
 Right-forearm-Updater
 =====================
 
-lsl - main updater files
+1. lsl = main updater files
+2. Support files = cuff updater file, collar syncing script and instructions
