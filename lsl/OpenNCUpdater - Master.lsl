@@ -57,16 +57,17 @@ string INSTALL_METHOD = "Standard";
 // find scripts that are already not running.
 DisableScript(string name) 
 {
-    if (llGetInventoryType(name) == INVENTORY_SCRIPT) {
-        if (llGetScriptState(name) != FALSE) {
+    if (llGetInventoryType(name) == INVENTORY_SCRIPT) 
+    {
+        if (llGetScriptState(name) != FALSE) 
+        {
             llSetScriptState(name, FALSE);
         }
     }
 }
 
 DoBundle() 
-{
-    // tell bundle slave to load the bundle.
+{ // tell bundle slave to load the bundle.
     string card = llList2String(lBundles, iBundleIdx);
     string mode = llList2String(lBundles, iBundleIdx + 1);
     string bundlemsg = llDumpList2String([iSecureChannel, kCollarKey, card, iPin, mode], "|");
@@ -99,13 +100,11 @@ SetBundleStatus(string bundlename, string status)
 {// find the bundle in the list
     integer n;
     integer stop = llGetListLength(lBundles);
-    for (n = 0; n < stop; n += 2) 
-    {
+    for (n = 0; n < stop; n += 2) {
         string card = llList2String(lBundles, n);
         list parts = llParseString2List(card, ["_"], []);
         string name = llList2String(parts, 2);
-        if (name == bundlename) 
-        {
+        if (name == bundlename) {
             lBundles = llListReplaceList(lBundles, [status], n + 1, n + 1);
             return;
         }
@@ -180,11 +179,7 @@ BundleMenu(integer page)
         else if (status == "REMOVE") 
         {
             choices += [BTN_UNINSTALL + " " + name];
-        } 
-//        else if (status == "DEPRECATED") 
-//        {
-//            choices += [BTN_DEPRECATED + " " + name];
-//        }
+        }
     }
     kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["START"], page);
 }
@@ -193,9 +188,10 @@ GiveMethodMenu()
 {
     string prompt = "\nStandard: \"Normal cuff update and clean up.\"";
     prompt += "\nCustom: \"Use this if you want wing and/or tail support.\"";
+    prompt += "Or if updateing Gaslight cuffs, untick pose, and tick Gaslight\"";
 prompt += "\nThe currently selected method is ["+INSTALL_METHOD+"]";
     list choices = ["Standard","Custom"];
-    kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["Help","START"],0);
+    kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["START"],0);
 }
 
 ReadVersionLine() 

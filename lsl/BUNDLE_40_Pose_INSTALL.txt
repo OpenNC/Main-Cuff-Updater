@@ -1,0 +1,30 @@
+ITEM|Leg Cuffs
+ITEM|Arm Cuffs
+ITEM|chain
+ITEM|rope
+ITEM|cuff-armsup
+ITEM|cuff-back
+ITEM|cuff-back2
+ITEM|cuff-belly
+ITEM|cuff-belt
+ITEM|cuff-belt2
+ITEM|cuff-butterfly
+ITEM|cuff-front
+ITEM|cuff-front2
+ITEM|cuff-hang
+ITEM|cuff-hanging
+ITEM|cuff-head
+ITEM|cuff-kneel
+ITEM|cuff-pinion
+ITEM|cuff-sit
+ITEM|cuff-splits
+ITEM|cuff-ushape
+ITEM|hogtie
+ITEM|hogtie1
+ITEM|hogtieb
+ITEM|hogtiel
+ITEM|hogtier
+ITEM|winter seale - u-shape2
+SCRIPT|OpenNC - armCuff
+SCRIPT|OpenNC - arms
+SCRIPT|OpenNC - legs

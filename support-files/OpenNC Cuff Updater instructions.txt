@@ -2,6 +2,8 @@ This the latest OpenNC cuff code released.
 This updater will update your old OpenCollar / OpenCuffs scripted cuffs to the latest OpenNC code.
 This will clear your Owner lists in your cuffs, but if you have the "OpenCollar - cuffs - 3.941" in your collar they will automatically update themselves. Just drop the enclosed script in to an unlocked collar (or you will be blocked by RLV restrictions) for your cuffs to sync to your collar (you may need to remove your collar and then wear it again to kick off the first sync to your cuffs).
 
+****** GasLight Cuffs see special instructions below**********
+
 1) rez the OpenNC cuff Updater on the ground.
 2) rez your right wrist (forearm) cuff on to the ground near the updater.
 3) drag and drop the enclosed OpenNC Update script into your cuff.
@@ -16,6 +18,13 @@ Most menu's can be accessed by adding a 'c' - ie
 <pre>a:<arm pose name>
 <pre>l:<leg pose name>
 
+Slave Cuff Install - to fix problem with slave cuffs not locking every time
+===========
+1) Rez the OpenNC Slave cuff Updater on the ground
+2) Rez one Slave cuff on the ground near the updater
+Follow instructions from 3) above
+Repeat these instructions for each slave cuff in your set..
 
-******NOTE******
-This updater will not update your other slave cuffs, at the time of writing you need to manually replace the root prim files. With out doing so you may sometimes have your slave cuffs not lock when worn, this is a bug within SL/Viewers RLV replies.
+*****Gaslight Cuffs******
+On the updater menu, go into custom, untick Pose, and tick Gaslight, this will give you the same poses and chains that work with these cuffs.
+You must also run the slave cuff updater to update the slave cuffs or you will not have any chains..
