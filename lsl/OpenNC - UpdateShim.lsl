@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////////////
 // ------------------------------------------------------------------------------ //
 //                            OpenNC - UpdateShim                                 //
 //                                 version 3.950                                  //
@@ -187,10 +187,12 @@ default
                     // look for a version in the name and remove if present
                     list nameparts = llParseString2List(llGetObjectName(), [" - "], []);
                     if (llGetListLength(nameparts) == 2 && (integer)llList2String(nameparts, 1)) 
-                    {// looks like there's a version in the name.  Remove
-                        // it!  
+                    {// looks like there's a version in the name.  Remove it!
+                        list attachpoint = llParseString2List(llGetObjectName(), ["("], []);
+                        string apoint = " ("+ llList2String(attachpoint, 1);
                         string just_name = llList2String(nameparts, 0);
-                        llSetObjectName(just_name);
+                        string new_name = just_name + apoint;
+                        llSetObjectName(new_name);
                     }
                     //restore settings 
                     integer n;
