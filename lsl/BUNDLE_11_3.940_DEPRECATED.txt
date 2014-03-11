@@ -12,6 +12,7 @@ SCRIPT|OpenCuffs - dialog cuff 3.940
 ITEM|OpenCuffs - getavi cuff 3.940
 SCRIPT|OpenCuffs - hide cuff 3.940
 ITEM|OpenCuffs - legs - 3.940
+SCRIPT|OpenCuffs - listener cuff 3.940
 SCRIPT|OpenCuffs - listener cuff 3.941
 SCRIPT|OpenCuffs - lock cuff  3.940
 ITEM|OpenCuffs - LockGuard V2 Listener  - 3.940
