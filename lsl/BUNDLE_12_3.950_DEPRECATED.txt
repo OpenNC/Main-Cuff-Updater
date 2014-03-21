@@ -18,3 +18,4 @@ SCRIPT|OpenNC - texture cuff 3.950
 SCRIPT|OpenNC - timer cuff 3.950
 ITEM|OpenNC - Tail - 3.950
 ITEM|OpenNC - wings - 3.950
+ITEM|OpenNC - update 1

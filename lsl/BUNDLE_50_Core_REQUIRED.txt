@@ -3,7 +3,33 @@ ITEM|defaultsettings
 ITEM|OpenNC License
 ITEM|OpenNC cuffs Guide
 ITEM|!totallytransparent
+ITEM|chain
+ITEM|rope
+ITEM|cuff-armsup
+ITEM|cuff-back
+ITEM|cuff-back2
+ITEM|cuff-belly
+ITEM|cuff-belt
+ITEM|cuff-belt2
+ITEM|cuff-butterfly
+ITEM|cuff-front
+ITEM|cuff-front2
+ITEM|cuff-hang
+ITEM|cuff-hanging
+ITEM|cuff-head
+ITEM|cuff-kneel
+ITEM|cuff-pinion
+ITEM|cuff-sit
+ITEM|cuff-splits
+ITEM|cuff-ushape
+ITEM|hogtie
+ITEM|hogtie1
+ITEM|hogtieb
+ITEM|hogtiel
+ITEM|hogtier
+ITEM|winter seale - u-shape2
 SCRIPT|OpenNC - _control
+SCRIPT|OpenNC - armCuff
 SCRIPT|OpenNC - appearance cuff
 SCRIPT|OpenNC - auth
 SCRIPT|OpenNC - color cuff
@@ -16,3 +42,4 @@ SCRIPT|OpenNC - rlvmain cuff
 SCRIPT|OpenNC - settings cuff
 SCRIPT|OpenNC - texture cuff
 SCRIPT|OpenNC - timer cuff
+SCRIPT|OpenNC - update

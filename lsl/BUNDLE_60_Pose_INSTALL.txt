@@ -1,0 +1,4 @@
+ITEM|Leg Cuffs
+ITEM|Arm Cuffs
+SCRIPT|OpenNC - arms
+SCRIPT|OpenNC - legs

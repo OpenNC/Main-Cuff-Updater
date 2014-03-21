@@ -51,3 +51,4 @@ ITEM|OpenCuffs - armCuff - 1.009
 ITEM|OpenCuffs - arms - 1.011
 ITEM|OpenCuffs - collar command parser - 3.011
 ITEM|OpenCuffs - legs - 1.011
+ITEM|OpenCuffs - LockGuard V2 Listener - 1.001
