@@ -1,4 +1,4 @@
-Right-forearm-Updater
+MAin-Cuff-Updater
 =====================
 
 1. lsl = main updater files
