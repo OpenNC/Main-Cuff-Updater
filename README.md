@@ -1,4 +1,4 @@
-MAin-Cuff-Updater
+Main-Cuff-Updater
 =====================
 
 1. lsl = main updater files
