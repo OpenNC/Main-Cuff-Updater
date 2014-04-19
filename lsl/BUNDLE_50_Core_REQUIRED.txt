@@ -28,10 +28,23 @@ ITEM|hogtieb
 ITEM|hogtiel
 ITEM|hogtier
 ITEM|winter seale - u-shape2
+ITEM|squirm
+ITEM|submit
+ITEM|tower
+ITEM|display
+ITEM|doggie
+ITEM|kneel
+ITEM|kneelup
+ITEM|nadu
+ITEM|naduw
+ITEM|cutie
+ITEM|belly
+ITEM|bendover
+ITEM|bracelets
+ITEM|Designer Guide OpenNC Cuffs 3.960+
 SCRIPT|OpenNC - _control
 SCRIPT|OpenNC - armCuff
 SCRIPT|OpenNC - appearance cuff
-SCRIPT|OpenNC - auth
 SCRIPT|OpenNC - color cuff
 SCRIPT|OpenNC - dialog cuff
 SCRIPT|OpenNC - hide cuff
@@ -42,4 +55,5 @@ SCRIPT|OpenNC - rlvmain cuff
 SCRIPT|OpenNC - settings cuff
 SCRIPT|OpenNC - texture cuff
 SCRIPT|OpenNC - timer cuff
-SCRIPT|OpenNC - update
+SCRIPT|OpenNC - update 3.960
+SCRIPT|OpenNC - auth

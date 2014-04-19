@@ -52,3 +52,22 @@ ITEM|OpenCuffs - arms - 1.011
 ITEM|OpenCuffs - collar command parser - 3.011
 ITEM|OpenCuffs - legs - 1.011
 ITEM|OpenCuffs - LockGuard V2 Listener - 1.001
+ITEM|OpenCuffs - anim
+ITEM|OpenCuffs - AOSwitch
+ITEM|OpenCuffs - appearance
+ITEM|OpenCuffs - auth
+ITEM|OpenCuffs - color
+ITEM|OpenCuffs - command parser
+ITEM|OpenCuffs - cuff
+ITEM|OpenCuffs - cuff-arms
+ITEM|OpenCuffs - cuff-legs
+ITEM|OpenCuffs - dialog
+ITEM|OpenCuffs - hide
+ITEM|OpenCuffs - listen
+ITEM|OpenCuffs - lock
+ITEM|OpenCuffs - menu
+ITEM|OpenCuffs - rlvmain
+ITEM|OpenCuffs - settings
+ITEM|OpenCuffs - shiny
+ITEM|OpenCuffs - texture
+ITEM|OpenCuffs - timer

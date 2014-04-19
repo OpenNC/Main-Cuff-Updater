@@ -1,7 +1,7 @@
-﻿////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // ------------------------------------------------------------------------------ //
 //                           OpenNCUpdater - Master                               //
-//                                 version 3.950                                  //
+//                                 version 3.960                                  //
 // ------------------------------------------------------------------------------ //
 // Licensed under the GPLv2 with additional requirements specific to Second Life® //
 // and other virtual metaverse environments.  ->  www.opencollar.at/license.html  //
@@ -28,7 +28,10 @@
 // version number always matches the contents of the "~version" card.
 
 key version_line_id;
-integer initChannel = -7483214;
+integer initChannelold = -7483214; // remove this after this updatesince this is the same as collar
+integer initChannel = -7483215;//changed to be unique Master cuff
+integer initChannelS = -7483216;//changed to be unique Slave cuff
+integer slave = FALSE;//are we updating a slave cuff?
 integer iSecureChannel;
 // store the script pin here when we get it from the collar.
 integer iPin;
@@ -100,11 +103,13 @@ SetBundleStatus(string bundlename, string status)
 {// find the bundle in the list
     integer n;
     integer stop = llGetListLength(lBundles);
-    for (n = 0; n < stop; n += 2) {
+    for (n = 0; n < stop; n += 2) 
+    {
         string card = llList2String(lBundles, n);
         list parts = llParseString2List(card, ["_"], []);
         string name = llList2String(parts, 2);
-        if (name == bundlename) {
+        if (name == bundlename) 
+        {
             lBundles = llListReplaceList(lBundles, [status], n + 1, n + 1);
             return;
         }
@@ -113,41 +118,76 @@ SetBundleStatus(string bundlename, string status)
 
 SetInstallmode(string type) 
 {//user clicked default.. restore Bundle Status
-    if(type == "Standard") 
+    if(slave == FALSE)
     {
-        lBundles = [];
-        integer n;
-        integer stop = llGetInventoryNumber(INVENTORY_NOTECARD);
-        for (n = 0; n < stop; n++) 
+        if(type == "Standard") 
         {
-            string name = llGetInventoryName(INVENTORY_NOTECARD, n);
-            if (llSubStringIndex(name, "BUNDLE_") == 0) 
+            lBundles = [];
+            integer n;
+            integer stop = llGetInventoryNumber(INVENTORY_NOTECARD);
+            for (n = 0; n < stop; n++) 
             {
-                list parts = llParseString2List(name, ["_"], []);
-                lBundles += [name, llList2String(parts, -1)];
+                string name = llGetInventoryName(INVENTORY_NOTECARD, n);
+                if (llSubStringIndex(name, "BUNDLE_") == 0) 
+                {
+                    list parts = llParseString2List(name, ["_"], []);
+                    lBundles += [name, llList2String(parts, -1)];
+                }
+            }
+            return;
+        }
+        string newstatus;
+        integer n;
+        integer stop = llGetListLength(lBundles);
+        //user clicked Basic.. set Bundle Status
+        if(type == "Tail")
+        {
+            newstatus = "REMOVE";
+        }
+        else if (type == "Wings")
+        {
+            newstatus = "INSTALL";
+        }
+        for (n = 0; n < stop; n += 2)
+        {
+            string card = llList2String(lBundles, n);
+            string status = llList2String(lBundles, n + 1);
+            if (status != "REQUIRED" && status != "DEPRECATED")
+            {
+                lBundles = llListReplaceList(lBundles, [newstatus], n + 1, n + 1);
             }
         }
-        return;
     }
-    string newstatus;
-    integer n;
-    integer stop = llGetListLength(lBundles);
-    //user clicked Basic.. set Bundle Status
-    if(type == "Tail")
+    else if(slave == TRUE)
     {
-        newstatus = "REMOVE";
-    }
-    else if (type == "Wings")
-    {
-        newstatus = "INSTALL";
-    }
-    for (n = 0; n < stop; n += 2)
-    {
-        string card = llList2String(lBundles, n);
-        string status = llList2String(lBundles, n + 1);
-        if (status != "REQUIRED" && status != "DEPRECATED")
+        if(type == "Standard") 
         {
-            lBundles = llListReplaceList(lBundles, [newstatus], n + 1, n + 1);
+            lBundles = [];
+            integer n;
+            integer stop = llGetInventoryNumber(INVENTORY_NOTECARD);
+            for (n = 0; n < stop; n++) 
+            {
+                string name = llGetInventoryName(INVENTORY_NOTECARD, n);
+                if (llSubStringIndex(name, "BUNDLESLAVE_") == 0) 
+                {
+                    list parts = llParseString2List(name, ["_"], []);
+                    lBundles += [name, llList2String(parts, -1)];
+                }
+            }
+            return;
+        }
+        string newstatus;
+        integer n;
+        integer stop = llGetListLength(lBundles);
+        //user clicked Basic.. set Bundle Status
+        for (n = 0; n < stop; n += 2)
+        {
+            string card = llList2String(lBundles, n);
+            string status = llList2String(lBundles, n + 1);
+            if (status != "REQUIRED" && status != "DEPRECATED")
+            {
+                lBundles = llListReplaceList(lBundles, [newstatus], n + 1, n + 1);
+            }
         }
     }
 }
@@ -186,12 +226,22 @@ BundleMenu(integer page)
 
 GiveMethodMenu() 
 {
-    string prompt = "\nStandard: \"Normal cuff update and clean up.\"";
-    prompt += "\nCustom: \"Use this if you want wing and/or tail support.\"";
-    prompt += "Or if updateing Gaslight cuffs, untick pose, and tick Gaslight\"";
-prompt += "\nThe currently selected method is ["+INSTALL_METHOD+"]";
-    list choices = ["Standard","Custom"];
-    kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["START"],0);
+    if(slave == FALSE)
+    {
+        string prompt = "\nStandard: \"Normal cuff update and clean up.\"";
+        prompt += "\nCustom: \"Use this if you want wing and/or tail support.\"";
+        prompt += "Or if updateing an original Gaslight cuff, untick pose, and tick Gaslight\"";
+        prompt += "\nThe currently selected method is ["+INSTALL_METHOD+"]";
+        list choices = ["Standard","Custom"];
+        kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["START"],0);
+    }
+    if(slave == TRUE)
+    {
+        string prompt = "\nStandard: \"Normal slave cuff update and clean up.\"";
+        prompt += "\nThe currently selected method is ["+INSTALL_METHOD+"]";
+        list choices = ["Standard"];
+        kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["Help","START"],0);
+    }
 }
 
 ReadVersionLine() 
@@ -205,7 +255,7 @@ ReadVersionLine()
 SetInstructionsText() 
 {
     llSetText("1 - Create a backup copy of your cuffs.\n" +
-              "2 - Rez your Right wrist Cuff next to me.\n" +
+              "2 - Rez a Cuff next to me.\n" +
               "3 - Drag and drop the OpenNC update script into the cuff.\n" + 
               "4 - In Local chat say \"UPDATE\" (without quote marks).\n"
                , <1,1,1>, 1.0);
@@ -233,11 +283,15 @@ Particles(key target)
     ]);
 }
 
-default {
+default 
+{
     state_entry() 
     {
+        lBundles = [];
         ReadVersionLine();
+        llListen(initChannelold, "", "", "");//remove after this update
         llListen(initChannel, "", "", "");
+        llListen(initChannelS, "", "", "");//Slave cuffs
         // set all scripts except self to not running
         // also build list of all bundles
         integer n;
@@ -253,14 +307,6 @@ default {
                     DisableScript(name);
                 }                
             }
-            else if (type == INVENTORY_NOTECARD) 
-            {// add card to bundle list if it's a bundle
-                if (llSubStringIndex(name, "BUNDLE_") == 0) 
-                {
-                    list parts = llParseString2List(name, ["_"], []);
-                    lBundles += [name, llList2String(parts, -1)];
-                }
-            }
         }
         SetInstructionsText();
         llParticleSystem([]);
@@ -270,16 +316,40 @@ default {
     {
         if (llGetOwnerKey(id) == llGetOwner()) 
         {
-            if (channel == initChannel) 
+            if ((channel == initChannel) || (channel == initChannelold))//remove second part of this after next update
             {// everything heard on the init channel is stuff that has to
                 // comply with the existing update kickoff protocol.  New stuff
                 // will be heard on the random secure channel instead.
+                slave = FALSE;
+                SetInstallmode("Standard");
                 list parts = llParseString2List(msg, ["|"], []);
                 string cmd = llList2String(parts, 0);
                 string param = llList2String(parts, 1);
                 if (cmd == "UPDATE") 
                 {// someone just clicked the upgrade button on their collar.
-                    llWhisper(initChannel, "get ready");
+                    llWhisper(channel, "get ready");
+                } 
+                else if (cmd == "ready") 
+                {// person clicked "Yes I want to update" on the collar menu.
+                    // the script pin will be in the param
+                    iPin = (integer)param;     
+                    kCollarKey = id;
+                    //BundleMenu(0);
+                    GiveMethodMenu();
+                }                
+            }
+             if (channel == initChannelS)
+            {// everything heard on the init channel is stuff that has to
+                // comply with the existing update kickoff protocol.  New stuff
+                // will be heard on the random secure channel instead.
+                slave = TRUE;
+                SetInstallmode("Standard");
+                list parts = llParseString2List(msg, ["|"], []);
+                string cmd = llList2String(parts, 0);
+                string param = llList2String(parts, 1);
+                if (cmd == "UPDATE") 
+                {// someone just clicked the upgrade button on their collar.
+                    llWhisper(initChannelS, "get ready");
                 } 
                 else if (cmd == "ready") 
                 {// person clicked "Yes I want to update" on the collar menu.
@@ -307,7 +377,8 @@ default {
     {
         if (num == DIALOG_RESPONSE) 
         {
-            if (id == kDialogID) {
+            if (id == kDialogID) 
+            {
                 list parts = llParseString2List(str, ["|"], []);
                 key av = (key)llList2String(parts, 0);
                 string button = llList2String(parts, 1);
@@ -331,7 +402,16 @@ default {
                 }
                 else if (button == "Help") 
                 {
-//                    llLoadURL(av, "Confused with the many choices? Find help on our website!","http://www.opencollar.at/updating-the-collar.html");
+                    if (slave == TRUE)
+                    {
+                        llOwnerSay("Hopefully you are updating a slave cuff, so just press START");
+                        GiveMethodMenu();
+                    }
+                    else
+                    {
+                        llOwnerSay("Unless you are updating an original Gaslight Main Cuff, OR want to install support for wing chains, and/or tail cuff. Just press START");
+                        GiveMethodMenu();
+                    }
                 }
                 else 
                 {

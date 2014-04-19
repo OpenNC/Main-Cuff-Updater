@@ -23,24 +23,46 @@ SCRIPT|OpenCuffs - texture cuff 3.940
 SCRIPT|OpenCuffs - timer cuff 3.940
 ITEM|OpenCuff License
 ITEM|OpenNC - _anim  - 3.940
+ITEM|OpenNC- _anim  - 3.940
 ITEM|OpenNC - _func - 3.940
+ITEM|OpenNC- _func - 3.940
 ITEM|OpenNC - _listen  - 3.940
+ITEM|OpenNC- _listen  - 3.940
 ITEM|OpenNC - AOSwitch - 3.940
+ITEM|OpenNC- AOSwitch - 3.940
 SCRIPT|OpenNC - appearance cuff 3.940
+ITEM|OpenNC- appearance cuff 3.940
 ITEM|OpenNC - armCuff  - 3.940
+ITEM|OpenNC- armCuff  - 3.940
 ITEM|OpenNC - arms - 3.940
+ITEM|OpenNC- arms - 3.940
 ITEM|OpenNC - auth - 3.941
+ITEM|OpenNC- auth cuff 3.940
+ITEM|OpenNC - auth cuff 3.941
 ITEM|OpenNC - collar command parser - 3.940
+ITEM|OpenNC- collar command parser - 3.940
 SCRIPT|OpenNC - color cuff  3.940
+ITEM|OpenNC- color cuff  3.940
 SCRIPT|OpenNC - dialog cuff 3.940
+ITEM|OpenNC- dialog cuff 3.940
 ITEM|OpenNC - getavi - 3.941
+ITEM|OpenNC- getavi cuff 3.940
 SCRIPT|OpenNC - hide cuff 3.940
+ITEM|OpenNC- hide cuff 3.940
 ITEM|OpenNC - legs - 3.940
+ITEM|OpenNC- legs - 3.940
 SCRIPT|OpenNC - listener cuff 3.941
 SCRIPT|OpenNC - lock cuff  3.940
+ITEM|OpenNC- lock cuff  3.940
 ITEM|OpenNC - LockGuard V2 Listener  - 3.940
+ITEM|OpenNC- LockGuard V2 Listener  - 3.940
 SCRIPT|OpenNC - menu cuff 3.940
+ITEM|OpenNC- menu cuff 3.940
 SCRIPT|OpenNC - rlvmain cuff 3.940
+ITEM|OpenNC- rlvmain cuff 3.940
 SCRIPT|OpenNC - settings cuff 3.940
+ITEM|OpenNC- settings cuff 3.940
 SCRIPT|OpenNC - texture cuff 3.940
+ITEM|OpenNC- texture cuff 3.940
 SCRIPT|OpenNC - timer cuff 3.940
+ITEM|OpenNC- timer cuff 3.940
