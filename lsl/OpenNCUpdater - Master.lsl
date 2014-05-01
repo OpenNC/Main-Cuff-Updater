@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // ------------------------------------------------------------------------------ //
 //                           OpenNCUpdater - Master                               //
-//                                 version 3.960                                  //
+//                                 version 3.961                                  //
 // ------------------------------------------------------------------------------ //
 // Licensed under the GPLv2 with additional requirements specific to Second Life® //
 // and other virtual metaverse environments.  ->  www.opencollar.at/license.html  //
@@ -28,10 +28,11 @@
 // version number always matches the contents of the "~version" card.
 
 key version_line_id;
-integer initChannelold = -7483214; // remove this after this updatesince this is the same as collar
+integer initChannelC = -7483214; // Collar updater channel
 integer initChannel = -7483215;//changed to be unique Master cuff
 integer initChannelS = -7483216;//changed to be unique Slave cuff
 integer slave = FALSE;//are we updating a slave cuff?
+integer collar = FALSE;//are we updating the collar??
 integer iSecureChannel;
 // store the script pin here when we get it from the collar.
 integer iPin;
@@ -118,7 +119,7 @@ SetBundleStatus(string bundlename, string status)
 
 SetInstallmode(string type) 
 {//user clicked default.. restore Bundle Status
-    if(slave == FALSE)
+    if((slave == FALSE) && (collar == FALSE))
     {
         if(type == "Standard") 
         {
@@ -158,7 +159,7 @@ SetInstallmode(string type)
             }
         }
     }
-    else if(slave == TRUE)
+    else if((slave == TRUE) && (collar == FALSE))
     {
         if(type == "Standard") 
         {
@@ -190,6 +191,39 @@ SetInstallmode(string type)
             }
         }
     }
+     else if((slave == FALSE) && (collar == TRUE))
+    {
+        if(type == "Standard") 
+        {
+            lBundles = [];
+            integer n;
+            integer stop = llGetInventoryNumber(INVENTORY_NOTECARD);
+            for (n = 0; n < stop; n++) 
+            {
+                string name = llGetInventoryName(INVENTORY_NOTECARD, n);
+                if (llSubStringIndex(name, "BUNDLECOLLAR_") == 0) 
+                {
+                    list parts = llParseString2List(name, ["_"], []);
+                    lBundles += [name, llList2String(parts, -1)];
+                }
+            }
+            return;
+        }
+        string newstatus;
+        integer n;
+        integer stop = llGetListLength(lBundles);
+        //user clicked Basic.. set Bundle Status
+        for (n = 0; n < stop; n += 2)
+        {
+            string card = llList2String(lBundles, n);
+            string status = llList2String(lBundles, n + 1);
+            if (status != "REQUIRED" && status != "DEPRECATED")
+            {
+                lBundles = llListReplaceList(lBundles, [newstatus], n + 1, n + 1);
+            }
+        }
+    }
+    else llOwnerSay("Opps I'm not sure what to do!");
 }
 
 BundleMenu(integer page) 
@@ -226,7 +260,7 @@ BundleMenu(integer page)
 
 GiveMethodMenu() 
 {
-    if(slave == FALSE)
+    if((slave == FALSE) && (collar == FALSE))
     {
         string prompt = "\nStandard: \"Normal cuff update and clean up.\"";
         prompt += "\nCustom: \"Use this if you want wing and/or tail support.\"";
@@ -235,12 +269,25 @@ GiveMethodMenu()
         list choices = ["Standard","Custom"];
         kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["START"],0);
     }
-    if(slave == TRUE)
+    else if((slave == TRUE) && (collar == FALSE))
     {
         string prompt = "\nStandard: \"Normal slave cuff update and clean up.\"";
         prompt += "\nThe currently selected method is ["+INSTALL_METHOD+"]";
         list choices = ["Standard"];
         kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["Help","START"],0);
+    }
+    else if((slave == FALSE) && (collar == TRUE))
+    {
+        string prompt = "\nStandard: \"Normal collar slave script update and clean up.\"";
+        prompt += "\nThe currently selected method is ["+INSTALL_METHOD+"]";
+        list choices = ["Standard"];
+        kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["Help","START"],0);
+    }
+    else
+    {
+        string prompt = "Houston we have a problem!";
+        list choices = [" "];
+        kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, [" "," "],0);
     }
 }
 
@@ -254,8 +301,9 @@ ReadVersionLine()
 
 SetInstructionsText() 
 {
-    llSetText("1 - Create a backup copy of your cuffs.\n" +
-              "2 - Rez a Cuff next to me.\n" +
+    llSetText("1 - Create a backup copy of your collar or cuffs.\n" +
+              "2 - Rez a Collar or Cuff next to me.\n" +
+              "    In your Collar, select Update, and skip 3,4 below.\n" +
               "3 - Drag and drop the OpenNC update script into the cuff.\n" + 
               "4 - In Local chat say \"UPDATE\" (without quote marks).\n"
                , <1,1,1>, 1.0);
@@ -265,10 +313,10 @@ Particles(key target)
 {
     llParticleSystem([ 
         PSYS_PART_FLAGS, 
-            PSYS_PART_INTERP_COLOR_MASK |
-            PSYS_PART_INTERP_SCALE_MASK |
-            PSYS_PART_TARGET_POS_MASK |
-            PSYS_PART_EMISSIVE_MASK,
+        PSYS_PART_INTERP_COLOR_MASK |
+        PSYS_PART_INTERP_SCALE_MASK |
+        PSYS_PART_TARGET_POS_MASK |
+        PSYS_PART_EMISSIVE_MASK,
         PSYS_SRC_PATTERN, PSYS_SRC_PATTERN_EXPLODE,
         PSYS_SRC_TEXTURE, "aa383f73-8be2-c693-acf0-9b8be8b4a155",
         PSYS_SRC_TARGET_KEY, target,
@@ -289,7 +337,7 @@ default
     {
         lBundles = [];
         ReadVersionLine();
-        llListen(initChannelold, "", "", "");//remove after this update
+        llListen(initChannelC, "", "", "");//Collar update
         llListen(initChannel, "", "", "");
         llListen(initChannelS, "", "", "");//Slave cuffs
         // set all scripts except self to not running
@@ -316,11 +364,12 @@ default
     {
         if (llGetOwnerKey(id) == llGetOwner()) 
         {
-            if ((channel == initChannel) || (channel == initChannelold))//remove second part of this after next update
+            if (channel == initChannel)//Main cuff Update
             {// everything heard on the init channel is stuff that has to
                 // comply with the existing update kickoff protocol.  New stuff
                 // will be heard on the random secure channel instead.
                 slave = FALSE;
+                collar = FALSE;
                 SetInstallmode("Standard");
                 list parts = llParseString2List(msg, ["|"], []);
                 string cmd = llList2String(parts, 0);
@@ -343,6 +392,7 @@ default
                 // comply with the existing update kickoff protocol.  New stuff
                 // will be heard on the random secure channel instead.
                 slave = TRUE;
+                collar = FALSE;
                 SetInstallmode("Standard");
                 list parts = llParseString2List(msg, ["|"], []);
                 string cmd = llList2String(parts, 0);
@@ -350,6 +400,29 @@ default
                 if (cmd == "UPDATE") 
                 {// someone just clicked the upgrade button on their collar.
                     llWhisper(initChannelS, "get ready");
+                } 
+                else if (cmd == "ready") 
+                {// person clicked "Yes I want to update" on the collar menu.
+                    // the script pin will be in the param
+                    iPin = (integer)param;     
+                    kCollarKey = id;
+                    //BundleMenu(0);
+                    GiveMethodMenu();
+                }                
+            }
+            if (channel == initChannelC)//Collar update channel
+            {// everything heard on the init channel is stuff that has to
+                // comply with the existing update kickoff protocol.  New stuff
+                // will be heard on the random secure channel instead.
+                slave = FALSE;
+                collar = TRUE;
+                SetInstallmode("Standard");
+                list parts = llParseString2List(msg, ["|"], []);
+                string cmd = llList2String(parts, 0);
+                string param = llList2String(parts, 1);
+                if (cmd == "UPDATE") 
+                {// someone just clicked the upgrade button on their collar.
+                    llWhisper(channel, "get ready");
                 } 
                 else if (cmd == "ready") 
                 {// person clicked "Yes I want to update" on the collar menu.
