@@ -180,7 +180,10 @@ default
             {
                 llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":runaway");
             }
-
+        else if (num == MENUNAME_REQUEST)
+            { //rebuild menu
+                llMessageLinked(LINK_THIS, MENUNAME_RESPONSE, parentmenu + "|" + submenu, NULL_KEY);
+            }
         else if (str == "rlvmain_on=1")//RLV on
         {
             llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":rlvon");  
