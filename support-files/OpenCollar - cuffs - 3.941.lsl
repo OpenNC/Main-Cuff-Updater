@@ -181,7 +181,7 @@ default
                 llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":runaway");
             }
 
-        if (str == "rlvmain_on=1")//RLV on
+        else if (str == "rlvmain_on=1")//RLV on
         {
             llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":rlvon");  
         }
@@ -193,56 +193,65 @@ default
         {
             llRegionSayTo(wearer,CUFF_CHANNEL,(string)id + ":cmenu");
         }
-        //Lets chop up at "=" to see if we want it
-        list lParam = llParseString2List(str, ["="], []);
-        integer h = llGetListLength(lParam);
-        str1= llList2String(lParam, 0);
-        str2= llList2String(lParam, 1);
-        if ((str1=="auth_group") && (str2 !=""))
+        else
         {
-            llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":setgroup");
+            //Lets chop up at "=" to see if we want it
+            list lParam = llParseString2List(str, ["="], []);
+            integer h = llGetListLength(lParam);
+            str1= llList2String(lParam, 0);
+            str2= llList2String(lParam, 1);
+            if ((str1=="auth_group") && (str2 !=""))
+            {
+                llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":setgroup");
+            }
+            else if (str1=="auth_group")
+            {
+                llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":unsetgroup");
+            }
+            else if ((str1=="auth_openaccess") && (str2 !=""))
+            {
+                llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":setopenaccess");
+            }
+            else if (str1=="auth_openaccess")
+            {
+                llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":unsetopenaccess");
+            }
+            else if (((str1=="auth_owner") | (str1=="auth_secowners") | (str1=="auth_blacklist")) && (str2 !=""))
+            {
+                llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":"+ str);
+            }
+            else
+            {
+                list lParam2 = llParseString2List(str1, ["_"], []);
+                integer g = llGetListLength(lParam2);
+                str3= llList2String(lParam2, 0);
+                //Lets see if it's color or texture information
+                if((str3 == "color") || (str3 == "texture"))
+                {
+                  llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":"+ str); 
+                }
+                else
+                {
+                    list lParams = llParseString2List(str, ["|"], []);
+                    integer i = llGetListLength(lParams);
+                    str0= llList2String(lParams, 0);
+                    str1= llList2String(lParams, 1);
+                    //Do we see a show, or hide?
+                    if (str1 =="Show All")
+                    {
+                        llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":show");
+                    }
+                    else if (str1 =="Hide All")
+                    {
+                        llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":hide");
+                    }
+                    else if ((str1 ==" OFF") && (num == DIALOG_RESPONSE))//RLV off (bad way of doing RLV off as maybe other " OFF" in the commands
+                    {
+                        llRegionSayTo(wearer,CUFF_CHANNEL,str0 + ":rlvoff");
+                    }
+                }
+            }
         }
-        else if (str1=="auth_group")
-        {
-            llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":unsetgroup");
-        }
-        else if ((str1=="auth_openaccess") && (str2 !=""))
-        {
-            llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":setopenaccess");
-        }
-        else if (str1=="auth_openaccess")
-        {
-            llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":unsetopenaccess");
-        }
-        else if (((str1=="auth_owner") | (str1=="auth_secowners") | (str1=="auth_blacklist")) && (str2 !=""))
-        {
-            llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":"+ str);
-        }
-        list lParam2 = llParseString2List(str1, ["_"], []);
-        integer g = llGetListLength(lParam2);
-        str3= llList2String(lParam2, 0);
-        //Lets see if it's color or texture information
-        if((str3 == "color") || (str3 == "texture"))
-        {
-          llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":"+ str); 
-        }
-        list lParams = llParseString2List(str, ["|"], []);
-        integer i = llGetListLength(lParams);
-        str0= llList2String(lParams, 0);
-        str1= llList2String(lParams, 1);
-        //Do we see a show, or hide?
-        if (str1 =="Show All")
-        {
-            llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":show");
-        }
-        else if (str1 =="Hide All")
-        {
-            llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":hide");
-        }
-        else if ((str1 ==" OFF") && (num == DIALOG_RESPONSE))//RLV off (bad way of doing RLV off as maybe other " OFF" in the commands
-        {
-            llRegionSayTo(wearer,CUFF_CHANNEL,str0 + ":rlvoff");
-        } 
     }
 }
 
