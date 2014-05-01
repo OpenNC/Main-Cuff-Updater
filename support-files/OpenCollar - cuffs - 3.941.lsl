@@ -180,7 +180,7 @@ default
             {
                 llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":runaway");
             }
-        else if (num == MENUNAME_REQUEST)
+        else if (num == MENUNAME_REQUEST && str == parentmenu)
             { //rebuild menu
                 llMessageLinked(LINK_THIS, MENUNAME_RESPONSE, parentmenu + "|" + submenu, NULL_KEY);
             }
