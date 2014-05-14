@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // ------------------------------------------------------------------------------ //
-//                            OpenCollar - cuffs - 3.961a                         //
+//                            OpenCollar - cuffs - 3.961                          //
 //                            version 3.961                                       //
 // ------------------------------------------------------------------------------ //
 // Licensed under the GPLv2 with additional requirements specific to Second Life® //
@@ -100,13 +100,7 @@ DoMenu(key id)
     prompt += "Pick an option.";
     g_kDialogID=Dialog(id, prompt, mybuttons, [UPMENU], 0);
 }
-//===============================================================================
-//= parameters   :  integer nOffset        Offset to make sure we use really a unique channel
-//=
-//= description  : Function which calculates a unique channel number based on the owner key, to reduce lag
-//=
-//= returns      : Channel number to be used
-//===============================================================================
+
 integer nGetOwnerChannel(key wearer,integer nOffset)
 {
     integer chan = (integer)("0x"+llGetSubString((string)wearer,2,7)) + nOffset;
@@ -120,28 +114,11 @@ integer nGetOwnerChannel(key wearer,integer nOffset)
     }
     return chan;
 }
-//===============================================================================
-//= parameters   :    string    szMsg   message string received
-//=
-//= return        :    integer TRUE/FALSE
-//=
-//= description  :    checks if a string begin with another string
-//=
-//===============================================================================
 
 integer nStartsWith(string szHaystack, string szNeedle) // http://wiki.secondlife.com/wiki/llSubStringIndex
 {
     return (llDeleteSubString(szHaystack, llStringLength(szNeedle), -1) == szNeedle);
 }
-
-//===============================================================================
-//= parameters   :   none
-//=
-//= return        :    none
-//=
-//= description  :    display an error message if more than one plugin of the same version is found
-//=
-//===============================================================================
 
 DoubleScriptCheck()
 {
@@ -193,19 +170,10 @@ default
     link_message(integer sender, integer num, string str, key id)
     {
         list lParams = llParseString2List(str, ["|"], []);
-//      integer i = llGetListLength(lParams);
         str1= llList2String(lParams, 1);
-        
-//      llOwnerSay("I am seeing on channel " + (string) num + " - " + str + " " +(string)id); //NG DEBUG
-//       if ((num >=2001)&&(num<=2002))
-       if (num ==2002)
-       {
-//          llOwnerSay("I am seeing on channel " + (string) num + " - " + str + " " +(string)id); //NG DEBUG
-        }
         
         if (num == MENUNAME_REQUEST && str == parentmenu)
         {
-//            llMessageLinked(LINK_THIS, MENUNAME_REQUEST, submenu, NULL_KEY);
             llMessageLinked(LINK_THIS, MENUNAME_RESPONSE, parentmenu + "|" + submenu, NULL_KEY);
         }
         
@@ -275,7 +243,7 @@ default
                 {
                     llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":unsetopenaccess");
                 }
-                else if (((str1=="auth_owner") | (str1=="auth_secowners") | (str1=="auth_blacklist")) && (str2 !=""))
+                else if (((str1=="auth_owner") || (str1=="auth_secowners") || (str1=="auth_blacklist")) && (str2 !=""))
                 {
                     llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":"+ str);
                 }
@@ -286,8 +254,17 @@ default
                     str3= llList2String(lParam2, 0);
         
                     //Lets see if it's color or texture information
-                    if((str3 == "color") || (str3 == "texture"))
+                    if(str3 == "color")
                     {
+                        llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":"+ str); 
+                    }
+                    else if(str3 == "texture")
+                    {
+                        if(llGetInventoryType(str2) == INVENTORY_TEXTURE)
+                        {    //Texture exist in Prim?  Error evasion.  It may be surplus.
+                            key k = llGetInventoryKey(str2);
+                            if(k != NULL_KEY) str = str1 + "=" + (string)k;    //Full permission is not NULL_KEY.  If it is not Full permission, then put texture in each Slave-cuffs.
+                        }
                         llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":"+ str); 
                     }
                     else
@@ -314,14 +291,12 @@ default
                         }
                         else if ((str1 ==" LOCK") && (num == DIALOG_RESPONSE) && (wait = FALSE))
                         {
-            //                llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":lock");
                               llMessageLinked(LINK_SET, LM_SETTING_SAVE, "C_lock=1", NULL_KEY);
                                 wait = TRUE;
                                 llSetTimerEvent(0.5);
                         }
                         else if ((str1 ==" UNLOCK") && (num == DIALOG_RESPONSE) && (wait = FALSE))
                         {
-            //                llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":unlock");
                                 llMessageLinked(LINK_SET, LM_SETTING_SAVE, "C_lock=0", NULL_KEY);
                                 wait = TRUE;
                                 llSetTimerEvent(0.5);
@@ -372,15 +347,16 @@ default
                     DoMenu(AV);
                 }
                 else if (message == "ReSync")
-                {
+                {//lets grab the saved settings so we can forward them on
                     llMessageLinked(LINK_THIS, LM_SETTING_REQUEST, "auth_owner", AV);
+                    llMessageLinked(LINK_THIS, LM_SETTING_REQUEST, "auth_secowners", AV);
+                    llMessageLinked(LINK_THIS, LM_SETTING_REQUEST, "auth_blacklist", AV);
                     llMessageLinked(LINK_THIS, LM_SETTING_REQUEST, "C_lock", AV);
                     llMessageLinked(LINK_THIS, LM_SETTING_REQUEST, "rlvmain_on", AV);
                     llMessageLinked(LINK_THIS, LM_SETTING_REQUEST, "Global_trace", AV);
                     llMessageLinked(LINK_THIS, LM_SETTING_REQUEST, "collarversion", AV);
                     DoMenu(AV);
                 }
-                
             }
         }
     }
