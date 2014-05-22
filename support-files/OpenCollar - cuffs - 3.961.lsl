@@ -145,24 +145,27 @@ default
 {
     state_entry()
     {
+        if (wearer != llGetOwner())
+        {
+            sync = TRUE;   //on new owener set sync to ON
+        }
         // wait for all script to be ready
         llSleep(0.6);
         wearer=llGetOwner();//who owns us
         llMessageLinked(LINK_THIS, LM_SETTING_REQUEST, "C_Sync", wearer);
         DoubleScriptCheck();//only one copy of me running
-        CUFF_CHANNEL = nGetOwnerChannel(wearer,1111);//lets get our channel
-        CUFF_CHANNEL = CUFF_CHANNEL++;//and add 1 to it to seperate it from collar channel
-        if (wearer != llGetOwner())
-        {
-            sync = TRUE;   //and set sync to ON
-        }
+        CUFF_CHANNEL = nGetOwnerChannel(wearer,1111);//lets get our channel (same as collar
+        CUFF_CHANNEL = ++ CUFF_CHANNEL;//and add 1 to it to seperate it from collar channel
         llMessageLinked(LINK_THIS, MENUNAME_REQUEST, submenu, NULL_KEY);
         llMessageLinked(LINK_THIS, MENUNAME_RESPONSE, parentmenu + "|" + submenu, NULL_KEY);
     }
 
     on_rez(integer iParam)
     {
-        llResetScript();//on new owner reset script
+        if (wearer!=llGetOwner())
+        {
+            llResetScript();//on new owner reset script
+        }
     }
     //
     //NG Main block of listen to link messages, and then forward to cuffs is required
@@ -197,9 +200,17 @@ default
         {
             sync = FALSE;
         }
-        else if (str == "C_Sync=1")//Sync off
+        else if (str == "C_Sync=1")//Sync on
         {
             sync = TRUE;
+        }
+        else if ((num >= COMMAND_OWNER)&&(num <= COMMAND_WEARER)) //code to bring up collar menu from cuff
+        {//see if this is a command from the cuffs
+            list lParam = llParseString2List(str, ["|"], []);
+            integer h = llGetListLength(lParam);
+            str1= llList2String(lParam, 0);
+            key kAv = (key)llList2String(lParam, 1);
+            llMessageLinked (LINK_SET, COMMAND_NOAUTH, str1, kAv);
         }
         if (sync == TRUE)//only do this bit if sync is turned on
         {
@@ -277,7 +288,7 @@ default
                         //Do we see a show, or hide?
                         if ((str1 =="Show Collar") || (str1 =="Show All") || (str =="show"))
                         {
-                            llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":cshow");
+                            llRegionSayTo(wearer,CUFF_CHANNEL,(string)id + ":cshow");
                             hide = FALSE;
                         }
                         else if ((str1 =="Hide Collar") || (str1 =="Hide All") || (str =="hide"))
@@ -320,7 +331,7 @@ default
                 }
                 else if (message == "Cuff Menu")//ask for the cuff menu
                 {
-                    llRegionSayTo(wearer,CUFF_CHANNEL,(string)AV + ":cmenu");
+                    llRegionSayTo(wearer,CUFF_CHANNEL,(string)AV + ":cmenu|"+(string)AV);
                 }
                 else if (message == TURNON)
                 {

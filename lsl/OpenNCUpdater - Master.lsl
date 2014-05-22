@@ -264,23 +264,23 @@ GiveMethodMenu()
     {
         string prompt = "\nStandard: \"Normal cuff update and clean up.\"";
         prompt += "\nCustom: \"Use this if you want wing and/or tail support.\"";
-        prompt += "Or if updateing an original Gaslight cuff, untick pose, and tick Gaslight\"";
+        prompt += "Or if updateing an old original Gaslight cuff, untick pose, and tick Gaslight\"";
         prompt += "\nThe currently selected method is ["+INSTALL_METHOD+"]";
         list choices = ["Standard","Custom"];
         kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["START"],0);
     }
     else if((slave == TRUE) && (collar == FALSE))
     {
-        string prompt = "\nStandard: \"Normal slave cuff update and clean up.\"";
-        prompt += "\nThe currently selected method is ["+INSTALL_METHOD+"]";
-        list choices = ["Standard"];
+        string prompt = "\n\n Normal slave cuff update and clean up.";
+        prompt += "\n";
+        list choices = [""];
         kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["Help","START"],0);
     }
     else if((slave == FALSE) && (collar == TRUE))
     {
-        string prompt = "\nStandard: \"Normal collar slave script update and clean up.\"";
-        prompt += "\nThe currently selected method is ["+INSTALL_METHOD+"]";
-        list choices = ["Standard"];
+        string prompt = "\n\n Normal collar slave script update and clean up.";
+        prompt += "\n";
+        list choices = [""];
         kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["Help","START"],0);
     }
     else
@@ -301,11 +301,12 @@ ReadVersionLine()
 
 SetInstructionsText() 
 {
-    llSetText("1 - Create a backup copy of your collar or cuffs.\n" +
-              "2 - Rez a Collar or Cuff next to me.\n" +
-              "    In your Collar, select Update, and skip 3,4 below.\n" +
-              "3 - Drag and drop the OpenNC update script into the cuff.\n" + 
-              "4 - In Local chat say \"UPDATE\" (without quote marks).\n"
+    llSetText("1 - Create a backup copy of your collar or cuffs\n" +
+              "2 - Rez a Collar / Cuff next to me\n" +
+              "    In your Collar, select Help/About, Update, and skip 3,4 below\n" +
+              ".\n" +
+              "3 - Drop the OpenNC update script into the cuff\n" + 
+              "4 - Touch the cuff once to get the update menu.\n"
                , <1,1,1>, 1.0);
 }
 
