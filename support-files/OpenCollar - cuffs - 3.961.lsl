@@ -154,8 +154,7 @@ default
         wearer=llGetOwner();//who owns us
         llMessageLinked(LINK_THIS, LM_SETTING_REQUEST, "C_Sync", wearer);
         DoubleScriptCheck();//only one copy of me running
-        CUFF_CHANNEL = nGetOwnerChannel(wearer,1111);//lets get our channel (same as collar
-        CUFF_CHANNEL = ++ CUFF_CHANNEL;//and add 1 to it to seperate it from collar channel
+        CUFF_CHANNEL = nGetOwnerChannel(wearer,1110);//lets get our channel (same as collar +1
         llMessageLinked(LINK_THIS, MENUNAME_REQUEST, submenu, NULL_KEY);
         llMessageLinked(LINK_THIS, MENUNAME_RESPONSE, parentmenu + "|" + submenu, NULL_KEY);
     }
