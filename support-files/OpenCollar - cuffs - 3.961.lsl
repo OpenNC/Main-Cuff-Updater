@@ -210,7 +210,7 @@ default
             integer h = llGetListLength(lParam);
             str1= llList2String(lParam, 0);
             key kAv = (key)llList2String(lParam, 1);
-            llMessageLinked (LINK_SET, COMMAND_NOAUTH, str1, kAv);
+            //llMessageLinked (LINK_SET, COMMAND_NOAUTH, str1, kAv);  // Infinite loop?
         }
         if (sync == TRUE)//only do this bit if sync is turned on
         {
@@ -377,3 +377,4 @@ default
         llSetTimerEvent(0);
     }
 }
+
