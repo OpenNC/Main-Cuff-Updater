@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // ------------------------------------------------------------------------------ //
 //                              OpenNC - update                                   //
-//                              version 3.961                                     //
+//                              version 3.968                                     //
 // ------------------------------------------------------------------------------ //
 // Licensed under the GPLv2 with additional requirements specific to Second Life® //
 // and other virtual metaverse environments.                                      //
@@ -12,6 +12,7 @@
 // Not now supported by OpenCollar at all                                         //
 ////////////////////////////////////////////////////////////////////////////////////
 integer g_iListener0;
+integer g_iListener1;
 key wearer;
 string g_sUpdaterName="OpenNC Updater";
 integer LM_CUFF_CMD = -551001;        // used as channel for linkemessages - sending commands
@@ -41,6 +42,7 @@ Notify(key kID, string sMsg, integer iAlsoNotifyWearer)
     }
     else
     {
+//        llInstantMessage(kID, sMsg);
     }
 }
 
@@ -122,6 +124,7 @@ default
     state_entry()
     {
         llListenRemove(g_iListener0);
+        llListenRemove(g_iListener1);
         //check if we're in an updater.  if so, then just shut self down and
         //don't do regular startup routine.
         if (llSubStringIndex(llGetObjectName(), "Updater") != -1)
@@ -131,6 +134,7 @@ default
         // we just started up.  Remember owner.
         wearer = llGetOwner();
         g_iListener0 = llListen(69, "", "", "");//yeh why not?
+        g_iListener1 = llListen(0, "", "", "UPDATE");
         llMessageLinked(LINK_THIS, LM_CUFF_CMD, "reset", "");
     }
 
@@ -141,6 +145,7 @@ default
             llSetScriptState(llGetScriptName(),FALSE);
         }
         llListenRemove(g_iListener0);
+        llListenRemove(g_iListener1);
         llResetScript();
     }
     
@@ -176,6 +181,24 @@ default
                 g_iUpdateChan = -7483215;
             }
         }
+        if (str == "UPDATE")
+            {
+                if (id == wearer)
+                {
+                    string sVersion = llList2String(llParseString2List(llGetObjectDesc(), ["~"], []), 1);
+                    g_iUpdatersNearBy = 0;
+                    g_iWillingUpdaters = 0;
+                    g_kUpdater = id;
+                    Notify(id,"Searching for a nearby updater.",FALSE);
+                    g_iUpdateHandle = llListen(g_iUpdateChan, "", "", "");
+                    llWhisper(g_iUpdateChan, "UPDATE|" + sVersion);
+                    llSetTimerEvent(10.0); //set a timer to close the g_iListener if no response
+                }
+                else
+                {
+                    Notify(id,"Only the wearer can update the " + CTYPE + ".",FALSE);
+                }
+            }
     }
 
     listen(integer channel, string name, key id, string message)

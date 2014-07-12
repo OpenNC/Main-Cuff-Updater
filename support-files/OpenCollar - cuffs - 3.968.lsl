@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // ------------------------------------------------------------------------------ //
-//                            OpenCollar - cuffs - 3.961                          //
-//                            version 3.961                                       //
+//                            OpenNC - cuffs - 3.968                              //
+//                            version 3.965                                       //
 // ------------------------------------------------------------------------------ //
 // Licensed under the GPLv2 with additional requirements specific to Second Life® //
 // and other virtual metaverse environments.                                      //
@@ -154,8 +154,7 @@ default
         wearer=llGetOwner();//who owns us
         llMessageLinked(LINK_THIS, LM_SETTING_REQUEST, "C_Sync", wearer);
         DoubleScriptCheck();//only one copy of me running
-        CUFF_CHANNEL = nGetOwnerChannel(wearer,1111);//lets get our channel (same as collar
-        CUFF_CHANNEL = ++ CUFF_CHANNEL;//and add 1 to it to seperate it from collar channel
+        CUFF_CHANNEL = nGetOwnerChannel(wearer,1110);//lets get our channel (same as collar +1)
         llMessageLinked(LINK_THIS, MENUNAME_REQUEST, submenu, NULL_KEY);
         llMessageLinked(LINK_THIS, MENUNAME_RESPONSE, parentmenu + "|" + submenu, NULL_KEY);
     }
@@ -230,6 +229,10 @@ default
             {
                 llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":unlock");
             }
+            else if ((str == "Collar_Pose") && (num >= COMMAND_OWNER && num <= COMMAND_WEARER))//The cuffs need the current collar pose
+            {
+                llMessageLinked(LINK_THIS, LM_SETTING_REQUEST, "anim_currentpose", "");
+            }
             else
             {
                 //Lets chop up at "=" to see if we want it
@@ -255,6 +258,10 @@ default
                     llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":unsetopenaccess");
                 }
                 else if (((str1=="auth_owner") || (str1=="auth_secowners") || (str1=="auth_blacklist")) && (str2 !=""))
+                {
+                    llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":"+ str);
+                }
+                else if (str1=="anim_currentpose")
                 {
                     llRegionSayTo(wearer,CUFF_CHANNEL,(string)wearer + ":"+ str);
                 }

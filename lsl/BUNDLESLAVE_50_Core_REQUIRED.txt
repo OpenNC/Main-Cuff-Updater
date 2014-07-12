@@ -1,1 +1,2 @@
 SCRIPT|OpenNC Slave Main
+SCRIPT|OpenNC - update

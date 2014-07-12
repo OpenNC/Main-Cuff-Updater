@@ -3,6 +3,7 @@ ITEM|defaultsettings
 ITEM|OpenNC License
 ITEM|OpenNC cuffs Guide
 ITEM|!totallytransparent
+ITEM|chainonly
 ITEM|chain
 ITEM|rope
 ITEM|cuff-armsup
@@ -42,6 +43,7 @@ ITEM|belly
 ITEM|bendover
 ITEM|bracelets
 ITEM|Designer Guide OpenNC Cuffs 3.960+
+ITEM|Collar Pose
 SCRIPT|OpenNC - _control
 SCRIPT|OpenNC - armCuff
 SCRIPT|OpenNC - appearance cuff
@@ -55,5 +57,6 @@ SCRIPT|OpenNC - rlvmain cuff
 SCRIPT|OpenNC - settings cuff
 SCRIPT|OpenNC - texture cuff
 SCRIPT|OpenNC - timer cuff
-SCRIPT|OpenNC - update 3.960
+SCRIPT|OpenNC - update
 SCRIPT|OpenNC - auth
+SCRIPT|OpenNC - Collar Pose

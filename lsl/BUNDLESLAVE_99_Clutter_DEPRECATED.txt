@@ -14,5 +14,5 @@ ITEM|OpenNC Slave - Appearance - 1.335
 ITEM|OpenNC Slave - Appearance
 ITEM|OpenNC Slave - Locking - 1.400
 ITEM|OpenNC Slave - Locking
-ITEM|OpenNC - update
 ITEM|OpenNC - update 3.960
+ITEM|OpenNC Slave Main

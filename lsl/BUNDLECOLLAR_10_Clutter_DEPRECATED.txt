@@ -2,3 +2,8 @@ ITEM|OpenCollar - cuffs - 3.007
 ITEM|OpenCollar - cuffs - 3.341
 ITEM|OpenCollar - cuffs - 3.940
 ITEM|OpenCollar - cuffs - 3.941
+ITEM|OpenCuff Slave - Slave
+ITEM|OpenCollar - cuffs - 3.961
+ITEM|OpenCuffs - _slave - 1.335
+ITEM|OpenNC - cuffs - 3.962
+ITEM|OpenNC - cuffs - 3.965
