@@ -1,2 +1,2 @@
-SCRIPT|OpenNC - cuffs - 3.968
+SCRIPT|OpenNC - cuffs - 3.980
 SCRIPT|OpenNC - _slave Cuffs

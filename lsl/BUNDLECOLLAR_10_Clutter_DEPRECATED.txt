@@ -7,3 +7,4 @@ ITEM|OpenCollar - cuffs - 3.961
 ITEM|OpenCuffs - _slave - 1.335
 ITEM|OpenNC - cuffs - 3.962
 ITEM|OpenNC - cuffs - 3.965
+ITEM|OpenNC - cuffs - 3.968

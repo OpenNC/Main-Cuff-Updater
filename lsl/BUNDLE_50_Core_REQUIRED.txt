@@ -42,7 +42,7 @@ ITEM|cutie
 ITEM|belly
 ITEM|bendover
 ITEM|bracelets
-ITEM|Designer Guide OpenNC Cuffs 3.960+
+ITEM|Designer Guide OpenNC Cuffs 3.980+
 ITEM|Collar Pose
 SCRIPT|OpenNC - _control
 SCRIPT|OpenNC - armCuff
