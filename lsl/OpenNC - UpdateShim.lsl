@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // ------------------------------------------------------------------------------ //
 //                            OpenNC - UpdateShim                                 //
-//                                 version 3.950                                  //
+//                                 version 3.980                                  //
 // ------------------------------------------------------------------------------ //
 // Licensed under the GPLv2 with additional requirements specific to Second Life® //
 // and other virtual metaverse environments.  ->  www.opencollar.at/license.html  //
@@ -16,17 +16,19 @@
 // giver script inside the updater to let it know what to send over.  When the
 // update is finished, this script does a little final cleanup and then deletes
 // itself.
-
 integer iStartParam;
-
 // a strided list of all scripts in inventory, with their names,versions,uuids
 // built on startup
 list lScripts;
-
 // list where we'll record all the settings and local settings we're sent, for replay later.
 // they're stored as strings, in form "<cmd>|<data>", where cmd is either LM_SETTING_SAVE
 list lSettings;
-
+integer COMMAND_NOAUTH = 0;
+integer LM_SETTING_SAVE = 2000;//scripts send messages on this channel to have settings saved to settings store
+integer LM_SETTING_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
+integer LM_SETTING_RESPONSE = 2002;//the settings script will send responses on this channel
+integer LM_SETTING_DELETE = 2003;//delete token from store
+integer LM_SETTING_EMPTY = 2004;//sent when a token has no value in the settings store
 // Return the name and version of an item as a list.  If item has no version, return empty string for that part.
 list GetNameParts(string name) 
 {
@@ -34,13 +36,9 @@ list GetNameParts(string name)
     string shortname = llDumpList2String(llList2List(nameparts, 0, 1), " - ");
     string version;
     if (llGetListLength(nameparts) > 2) 
-    {
         version = llList2String(nameparts, -1);
-    } 
     else 
-    {
         version = "";
-    }
     return [shortname, version];
 }
 
@@ -50,26 +48,13 @@ key GetScriptFullname(string name)
 {
     integer idx = llListFindList(lScripts, [name]);
     if (idx == -1) 
-    {
         return (key)"";
-    }
-    
     string version = llList2String(lScripts, idx + 1);
-    if (version == "") {
+    if (version == "")
         return name;
-    } 
     else 
-    {
         return llDumpList2String([name, version], " - ");
-    }
 }
-
-integer COMMAND_NOAUTH = 0;
-integer LM_SETTING_SAVE = 2000;//scripts send messages on this channel to have settings saved to settings store
-integer LM_SETTING_REQUEST = 2001;//when startup, scripts send requests for settings on this channel
-integer LM_SETTING_RESPONSE = 2002;//the settings script will send responses on this channel
-integer LM_SETTING_DELETE = 2003;//delete token from store
-integer LM_SETTING_EMPTY = 2004;//sent when a token has no value in the settings store
 
 default
 {
@@ -87,8 +72,7 @@ default
         // listen on the start param channel
         llListen(iStartParam, "", "", "");
         // let mama know we're ready
-        llWhisper(iStartParam, "reallyready");
-
+        llRegionSay(iStartParam, "reallyready");
     }
     
     listen(integer channel, string name, key id, string msg) 
@@ -108,21 +92,15 @@ default
                     {
                         // see if we have that script in our list.
                         integer idx = llListFindList(lScripts, [name]);
-                        if (idx == -1) 
-                        {
-                            // script isn't in our list.
+                        if (idx == -1) // script isn't in our list.
                             cmd = "GIVE";
-                        } 
                         else 
                         {
                             // it's in our list.  Check UUID.
                             string script_name = GetScriptFullname(name);
                             key script_id = llGetInventoryKey(script_name);
-                            if (script_id == uuid) 
-                            {
-                                // already have script.  skip
+                            if (script_id == uuid) // already have script.  skip
                                 cmd = "SKIP";
-                            } 
                             else 
                             {
                                 // we have the script but it's the wrong version.  delete and get new one.
@@ -142,42 +120,31 @@ default
                                 llRemoveInventory(name);
                                 cmd = "GIVE";
                             } 
-                            else 
-                            {
-                                // match.  Skip
+                            else // match.  Skip
                                 cmd = "SKIP";
-                            }
                         } 
-                        else 
-                        {
-                            // we don't have item. get it.
+                        else // we don't have item. get it
                             cmd = "GIVE";
-                        }
-                    }                
+                    }
                 } 
                 else if (mode == "REMOVE" || mode == "DEPRECATED") 
                 {
-
                     if (type == "SCRIPT") 
                     {
                         string script_name = GetScriptFullname(name);
                         
                         if (llGetInventoryType(script_name) != INVENTORY_NONE) 
-                        {
                             llRemoveInventory(script_name);
-                        }
                     } 
                     else if (type == "ITEM") 
                     {
                         if (llGetInventoryType(name) != INVENTORY_NONE) 
-                        {
                             llRemoveInventory(name);
-                        }
                     }
                     cmd = "OK";
                 }
                 string response = llDumpList2String([type, name, cmd], "|");
-                llRegionSayTo(id, channel, response);                                                                
+                llRegionSayTo(id, channel, response);
             } 
             else 
             {
@@ -223,9 +190,7 @@ default
             if (str != "settings=sent") 
             {
                 if (llListFindList(lSettings, [str]) == -1) 
-                {
                     lSettings += [str];
-                }
             }
         }
     }

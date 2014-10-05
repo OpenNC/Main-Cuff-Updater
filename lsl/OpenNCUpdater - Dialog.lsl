@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // ------------------------------------------------------------------------------ //
 //                           OpenNCUpdater - Dialog                               //
-//                                 version 3.950                                  //
+//                                 version 3.980                                  //
 // ------------------------------------------------------------------------------ //
 // Licensed under the GPLv2 with additional requirements specific to Second Life® //
 // and other virtual metaverse environments.  ->  www.opencollar.at/license.html  //
@@ -10,9 +10,7 @@
 // ©   2013 - 2014  OpenNC                                                        //
 // ------------------------------------------------------------------------------ //
 ////////////////////////////////////////////////////////////////////////////////////
-
 //an adaptation of Schmobag Hogfather's SchmoDialog script
-
 //MESSAGE MAP
 integer COMMAND_OWNER = 500;
 integer COMMAND_SECOWNER = 501;
@@ -34,19 +32,18 @@ list g_lRemoteMenus;
 integer g_iStrideLength = 9;
 key g_kWearer;
 
-Notify(key keyID, string sMsg, integer nAlsoNotifyWearer)
+Notify(key kID, string sMsg, integer nAlsoNotifyWearer)
 {
-    if (keyID == g_kWearer)
-    {
+    if (kID == g_kWearer)
         llOwnerSay(sMsg);
-    }
     else
     {
-        llInstantMessage(keyID,sMsg);
-        if (nAlsoNotifyWearer)
-        {
+        if (llGetAgentSize(kID) != ZERO_VECTOR)
+            llRegionSayTo(kID,0,sMsg);
+        else
+            llInstantMessage(kID, sMsg);
+        if (nAlsoNotifyWearer == TRUE)
             llOwnerSay(sMsg);
-        }
     }
 }
 
@@ -61,13 +58,9 @@ list CharacterCountCheck(list lIn, key ID)
     {
         s=llList2String(lIn,i);
         if (llStringLength(s)>24)
-        {
             Notify(ID, "The following button is longer than 24 characters and has been removed (can be caused by the name length of the item in the collars inventory): "+s, TRUE);
-        }
         else
-        {
             lOut+=[s];
-        }     
     }
     return lOut;
 }
@@ -77,9 +70,7 @@ integer RandomUniqueChannel()
 {
     integer iOut = llRound(llFrand(10000000)) + 100000;
     if (~llListFindList(g_lMenus, [iOut]))
-    {
         iOut = RandomUniqueChannel();
-    }
     return iOut;
 }
 
@@ -116,28 +107,18 @@ Dialog(key kRecipient, string sPrompt, list lMenuItems, list lUtilityButtons, in
         sThisPrompt = sPrompt;
     }
     else if (iPromptlen + llStringLength(sThisPrompt)< 512)
-    {
         sThisPrompt= sPrompt + sThisPrompt;
-    }
     else
-    {
         sThisPrompt= sPrompt;
-    }
-    
     lButtons = SanitizeButtons(lButtons);
     lUtilityButtons = SanitizeButtons(lUtilityButtons);
-    
     integer iChan = RandomUniqueChannel();
     integer g_iListener = llListen(iChan, "", kRecipient, "");
     llSetTimerEvent(g_iReapeat);
     if (iNumitems > iMyPageSize)
-    {
-        llDialog(kRecipient, sThisPrompt, PrettyButtons(lButtons, lUtilityButtons,[PREV,MORE]), iChan);      
-    }
+        llDialog(kRecipient, sThisPrompt, PrettyButtons(lButtons, lUtilityButtons,[PREV,MORE]), iChan);
     else
-    {
         llDialog(kRecipient, sThisPrompt, PrettyButtons(lButtons, lUtilityButtons,[]), iChan);
-    }    
     integer ts = llGetUnixTime() + g_iTimeOut;
     g_lMenus += [iChan, kID, g_iListener, ts, kRecipient, sPrompt, llDumpList2String(lMenuItems, "|"), llDumpList2String(lUtilityButtons, "|"), iPage];
 }
@@ -150,13 +131,9 @@ list SanitizeButtons(list lIn)
     {
         integer type = llGetListEntryType(lIn, n);
         if (llList2String(lIn, n) == "") //remove empty sStrings
-        {
             lIn = llDeleteSubList(lIn, n, n);
-        }        
         else if (type != TYPE_STRING)        //cast anything else to string
-        {
             lIn = llListReplaceList(lIn, [llList2String(lIn, n)], n, n);
-        }
     }
     return lIn;
 }
@@ -165,7 +142,7 @@ list PrettyButtons(list lOptions, list lUtilityButtons, list iPagebuttons)
 {//returns a list formatted to that "options" will start in the top left of a dialog, and "utilitybuttons" will start in the bottom right
     list lSpacers;
     list lCombined = lOptions + lUtilityButtons + iPagebuttons;
-    while (llGetListLength(lCombined) % 3 != 0 && llGetListLength(lCombined) < 12)    
+    while (llGetListLength(lCombined) % 3 != 0 && llGetListLength(lCombined) < 12)
     {
         lSpacers += [BLANK];
         lCombined = lOptions + lSpacers + lUtilityButtons + iPagebuttons;
@@ -173,19 +150,14 @@ list PrettyButtons(list lOptions, list lUtilityButtons, list iPagebuttons)
     // check if a UPBUTTON is present and remove it for the moment
     integer u = llListFindList(lCombined, [UPMENU]);
     if (u != -1)
-    {
         lCombined = llDeleteSubList(lCombined, u, u);
-    }
     list lOut = llList2List(lCombined, 9, 11);
     lOut += llList2List(lCombined, 6, 8);
-    lOut += llList2List(lCombined, 3, 5);    
-    lOut += llList2List(lCombined, 0, 2);    
+    lOut += llList2List(lCombined, 3, 5);
+    lOut += llList2List(lCombined, 0, 2);
     //make sure we move UPMENU to the lower right corner
     if (u != -1)
-    {
         lOut = llListInsertList(lOut, [UPMENU], 2);
-    }
-
     return lOut;    
 }
 
@@ -214,7 +186,7 @@ CleanList()
             key kID = llList2Key(g_lMenus, n + 1);
             llMessageLinked(LINK_SET, DIALOG_TIMEOUT, "", kID);
             g_lMenus = RemoveMenuStrkIDe(g_lMenus, n);
-        }            
+        }
     } 
 }
 
@@ -261,9 +233,7 @@ default
                     return;
                 }
                 else
-                {
                     g_lRemoteMenus = llListReplaceList(g_lRemoteMenus, [], iIndex, iIndex+1);
-                }
             }
             string sPrompt = llList2String(lParams, 1);
             integer iPage = (integer)llList2String(lParams, 2);
@@ -283,22 +253,16 @@ default
                 {
                     integer iIndex = llListFindList(g_lRemoteMenus, [kID]);
                     if (~iIndex)
-                    {
                         g_lRemoteMenus = llListReplaceList(g_lRemoteMenus, [kID, llGetSubString(sCmd,  4, -1)], iIndex, iIndex+1);
-                    }
                     else
-                    {
                         g_lRemoteMenus += [kID, llGetSubString(sCmd, 4, -1)];
-                    }
                     llMessageLinked(LINK_SET, iNum, "menu", kID);
                 }
                 else if (llGetSubString(sCmd, 0, 2) == "off")
                 {
                     integer iIndex = llListFindList(g_lRemoteMenus, [kID]);
                     if (~iIndex)
-                    {
                         g_lRemoteMenus = llListReplaceList((g_lRemoteMenus = []) + g_lRemoteMenus, [], iIndex, iIndex+1);
-                    }
                 }
                 else if (llGetSubString(sCmd, 0, 8) == "response:")
                 {
@@ -307,9 +271,7 @@ default
                     llMessageLinked(LINK_SET, DIALOG_RESPONSE, llList2String(lParams, 0) + "|" + llList2String(lParams, 1) + "|" + llList2String(lParams, 2), llList2String(lParams, 3));
                 }
                 else if (llGetSubString(sCmd, 0, 7) == "timeout:")
-                {
                     llMessageLinked(LINK_SET, DIALOG_TIMEOUT, "", llGetSubString(sCmd, 8, -1));
-                }
             }
         }
     }
@@ -326,38 +288,28 @@ default
             list ubuttons = llParseStringKeepNulls(llList2String(g_lMenus, iMenuIndex + 7), ["|"], []);
             integer iPage = llList2Integer(g_lMenus, iMenuIndex + 8);    
             g_lMenus = RemoveMenuStrkIDe(g_lMenus, iMenuIndex);       
-                   
             if (sMessage == MORE)
             {//increase the page num and give new menu
                 iPage++;
                 integer thisiPagesize = iPagesize - llGetListLength(ubuttons) - 2;
                 if (iPage * thisiPagesize >= llGetListLength(items))
-                {
                     iPage = 0;
-                }
                 Dialog(kID, sPrompt, items, ubuttons, iPage, kMenuID);
             }
             else if (sMessage == PREV)
             {//increase the page num and give new menu
                 iPage--;
-
                 if (iPage < 0)
                 {
                     integer thisiPagesize = iPagesize - llGetListLength(ubuttons) - 2;
-
                     iPage = (llGetListLength(items)-1)/thisiPagesize;
                 }
                 Dialog(kID, sPrompt, items, ubuttons, iPage, kMenuID);
             }
             else if (sMessage == BLANK)
-            
-            {//give the same menu back
                 Dialog(kID, sPrompt, items, ubuttons, iPage, kMenuID);
-            }            
             else
-            {
                 llMessageLinked(LINK_SET, DIALOG_RESPONSE, (string)kAv + "|" + sMessage + "|" + (string)iPage, kMenuID);
-            }  
         }
     }
     
@@ -366,8 +318,6 @@ default
         CleanList();    
         //if list is empty after that, then stop timer
         if (!llGetListLength(g_lMenus))
-        {
             llSetTimerEvent(0.0);
-        }
     }
 }

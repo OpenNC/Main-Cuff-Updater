@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // ------------------------------------------------------------------------------ //
 //                        OpenNCUpdater - BundleGiver                             //
-//                                 version 3.950                                  //
+//                                 version 3.980                                  //
 // ------------------------------------------------------------------------------ //
 // Licensed under the GPLv2 with additional requirements specific to Second Life® //
 // and other virtual metaverse environments.  ->  www.opencollar.at/license.html  //
@@ -21,7 +21,6 @@
 
 // once the end of the notecard is reached, this script sends a BUNDLE_DONE message that includes all the same 
 // stuff it got in DO_BUNDLE (talkchannel, recipient, card, pin).
-
 integer DO_BUNDLE = 98749;
 integer BUNDLE_DONE = 98750;
 integer talkchannel;
@@ -77,12 +76,9 @@ default
                 string name = llList2String(parts, 1);
                 key uuid;
                 string msg;
-                
                 SetStatus(name);
-                
                 uuid = llGetInventoryKey(name);
                 msg = llDumpList2String([type, name, uuid, mode], "|");
-            
                 llRegionSayTo(rcpt, talkchannel, msg);
             }
             else
@@ -111,13 +107,9 @@ default
             else if (cmd == "GIVE")
             {// give the item, and then read the next notecard line.
                 if (type == "ITEM")
-                {
                     llGiveInventory(id, name);
-                }
-                else if (type == "SCRIPT")
-                {// get the full name, and load it via script pin.
+                else if (type == "SCRIPT")// get the full name, and load it via script pin.
                     llRemoteLoadScriptPin(id, name, pin, TRUE, 0);
-                }
                 line++;
                 lineid = llGetNotecardLine(card, line);
             }
@@ -132,8 +124,6 @@ default
     changed(integer change)
     {
         if (change & CHANGED_INVENTORY)
-        {
             llResetScript();
-        }
     }
 }

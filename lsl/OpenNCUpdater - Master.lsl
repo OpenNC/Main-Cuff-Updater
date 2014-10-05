@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // ------------------------------------------------------------------------------ //
 //                           OpenNCUpdater - Master                               //
-//                                 version 3.961                                  //
+//                                 version 3.980                                  //
 // ------------------------------------------------------------------------------ //
 // Licensed under the GPLv2 with additional requirements specific to Second Life® //
 // and other virtual metaverse environments.  ->  www.opencollar.at/license.html  //
@@ -18,12 +18,10 @@
 // expect this to work like the old updater.  Because we load an update shim
 // script right after handshaking, we're free to rewrite everything that comes
 // after the handshake.
-
 // In addition to the handshake and shim installation, this script decides
 // which bundles should be installed into (or removed from) the collar.  It
 // loops over each bundle in inventory, telling the BundleGiver script to
 // install or remove each.
-
 // This script also does a little bit of magic to ensure that the updater's
 // version number always matches the contents of the "~version" card.
 
@@ -64,9 +62,7 @@ DisableScript(string name)
     if (llGetInventoryType(name) == INVENTORY_SCRIPT) 
     {
         if (llGetScriptState(name) != FALSE) 
-        {
             llSetScriptState(name, FALSE);
-        }
     }
 }
 
@@ -89,7 +85,6 @@ key ShortKey()
         integer iIndex = (integer)llFrand(16);//yes this is correct; an integer cast rounds towards 0.  See the llFrand wiki entry.
         sOut += llGetSubString(sChars, iIndex, iIndex);
     }
-     
     return (key)(sOut + "-0000-0000-0000-000000000000");
 }
 
@@ -142,21 +137,15 @@ SetInstallmode(string type)
         integer stop = llGetListLength(lBundles);
         //user clicked Basic.. set Bundle Status
         if(type == "Tail")
-        {
             newstatus = "REMOVE";
-        }
         else if (type == "Wings")
-        {
             newstatus = "INSTALL";
-        }
         for (n = 0; n < stop; n += 2)
         {
             string card = llList2String(lBundles, n);
             string status = llList2String(lBundles, n + 1);
             if (status != "REQUIRED" && status != "DEPRECATED")
-            {
                 lBundles = llListReplaceList(lBundles, [newstatus], n + 1, n + 1);
-            }
         }
     }
     else if((slave == TRUE) && (collar == FALSE))
@@ -186,9 +175,7 @@ SetInstallmode(string type)
             string card = llList2String(lBundles, n);
             string status = llList2String(lBundles, n + 1);
             if (status != "REQUIRED" && status != "DEPRECATED")
-            {
                 lBundles = llListReplaceList(lBundles, [newstatus], n + 1, n + 1);
-            }
         }
     }
      else if((slave == FALSE) && (collar == TRUE))
@@ -218,9 +205,7 @@ SetInstallmode(string type)
             string card = llList2String(lBundles, n);
             string status = llList2String(lBundles, n + 1);
             if (status != "REQUIRED" && status != "DEPRECATED")
-            {
                 lBundles = llListReplaceList(lBundles, [newstatus], n + 1, n + 1);
-            }
         }
     }
     else llOwnerSay("Opps I'm not sure what to do!");
@@ -241,19 +226,12 @@ BundleMenu(integer page)
         string status = llList2String(lBundles, n + 1);
         list parts = llParseString2List(card, ["_"], []);
         string name = llList2String(parts, 2);
-        
         if (status == "INSTALL") 
-        {
             choices += [BTN_INSTALL + " " + name];
-        } 
         else if (status == "REQUIRED") 
-        {
-            choices += [BTN_REQUIRED + " " + name];                            
-        } 
+            choices += [BTN_REQUIRED + " " + name];
         else if (status == "REMOVE") 
-        {
             choices += [BTN_UNINSTALL + " " + name];
-        }
     }
     kDialogID = Dialog(llGetOwner(), prompt + "\n", choices, ["START"], page);
 }
@@ -294,19 +272,17 @@ GiveMethodMenu()
 ReadVersionLine() 
 {// try to keep object's version in sync with "~version" notecard.
     if (llGetInventoryType("~version") == INVENTORY_NOTECARD) 
-    {
         version_line_id = llGetNotecardLine("~version", 0);
-    }
 }
 
 SetInstructionsText() 
 {
-    llSetText("1 - Create a backup copy of your collar or cuffs\n" +
+    llSetText("1 - Create a backup copy of your collar or cuff\n" +
               "2 - Rez a Collar / Cuff next to me\n" +
-              "    In your Collar, select Help/About, Update, and skip 3,4 below\n" +
+              "    In your Collar, select Help/About, Update, & skip 3,4 below\n" +
               ".\n" +
               "3 - Drop the OpenNC update script into the cuff\n" + 
-              "4 - Touch the cuff once to get the update menu.\n"
+              "4 - Touch the cuff (maybe twice) to get the update menu.\n"
                , <1,1,1>, 1.0);
 }
 
@@ -352,9 +328,7 @@ default
             if (type == INVENTORY_SCRIPT) 
             {// ignore updater scripts.  set others to not running.
                 if (llSubStringIndex(name, "OpenNCUpdater") != 0) 
-                {
                     DisableScript(name);
-                }                
             }
         }
         SetInstructionsText();
@@ -375,20 +349,17 @@ default
                 list parts = llParseString2List(msg, ["|"], []);
                 string cmd = llList2String(parts, 0);
                 string param = llList2String(parts, 1);
-                if (cmd == "UPDATE") 
-                {// someone just clicked the upgrade button on their collar.
-                    llWhisper(channel, "get ready");
-                } 
+                if (cmd == "UPDATE") // someone just clicked the upgrade button on their collar.
+                    llRegionSay(channel, "get ready");
                 else if (cmd == "ready") 
                 {// person clicked "Yes I want to update" on the collar menu.
                     // the script pin will be in the param
-                    iPin = (integer)param;     
+                    iPin = (integer)param;
                     kCollarKey = id;
-                    //BundleMenu(0);
                     GiveMethodMenu();
-                }                
+                }
             }
-             if (channel == initChannelS)
+            else if (channel == initChannelS)
             {// everything heard on the init channel is stuff that has to
                 // comply with the existing update kickoff protocol.  New stuff
                 // will be heard on the random secure channel instead.
@@ -398,20 +369,17 @@ default
                 list parts = llParseString2List(msg, ["|"], []);
                 string cmd = llList2String(parts, 0);
                 string param = llList2String(parts, 1);
-                if (cmd == "UPDATE") 
-                {// someone just clicked the upgrade button on their collar.
-                    llWhisper(initChannelS, "get ready");
-                } 
+                if (cmd == "UPDATE") // someone just clicked the upgrade button on their collar.
+                    llRegionSay(initChannelS, "get ready");
                 else if (cmd == "ready") 
                 {// person clicked "Yes I want to update" on the collar menu.
                     // the script pin will be in the param
-                    iPin = (integer)param;     
+                    iPin = (integer)param;
                     kCollarKey = id;
-                    //BundleMenu(0);
                     GiveMethodMenu();
-                }                
+                }
             }
-            if (channel == initChannelC)//Collar update channel
+            else if (channel == initChannelC)//Collar update channel
             {// everything heard on the init channel is stuff that has to
                 // comply with the existing update kickoff protocol.  New stuff
                 // will be heard on the random secure channel instead.
@@ -421,26 +389,23 @@ default
                 list parts = llParseString2List(msg, ["|"], []);
                 string cmd = llList2String(parts, 0);
                 string param = llList2String(parts, 1);
-                if (cmd == "UPDATE") 
-                {// someone just clicked the upgrade button on their collar.
-                    llWhisper(channel, "get ready");
-                } 
+                if (cmd == "UPDATE") // someone just clicked the upgrade button on their collar.
+                    llRegionSay(channel, "get ready");
                 else if (cmd == "ready") 
                 {// person clicked "Yes I want to update" on the collar menu.
                     // the script pin will be in the param
-                    iPin = (integer)param;     
+                    iPin = (integer)param;
                     kCollarKey = id;
-                    //BundleMenu(0);
                     GiveMethodMenu();
-                }                
-            } 
+                }
+            }
             else if (channel == iSecureChannel) 
             {
                 if (msg == "reallyready") 
                 {
                     Particles(id);
                     iBundleIdx = 0;
-                    DoBundle();       
+                    DoBundle();
                 }
             }
         }
@@ -471,9 +436,7 @@ default
                     GiveMethodMenu();
                 } 
                 else if (button == "Custom") 
-                {
                     BundleMenu(0);
-                }
                 else if (button == "Help") 
                 {
                     if (slave == TRUE)
@@ -493,13 +456,9 @@ default
                     string status = llGetSubString(button, 0, 2);
                     string bundlename = llGetSubString(button, 4, -1);
                     if (status == BTN_REQUIRED) 
-                    {
                         llOwnerSay("The " + bundlename + " bundle is required and cannot be removed.");
-                    } 
                     else if (status == BTN_DEPRECATED) 
-                    {
                         llOwnerSay("The " + bundlename + " bundle is deprecated and must be removed.");
-                    } 
                     else if (status == BTN_INSTALL) 
                     {
                         // if the button said +, that means we need to switch it to -
@@ -521,9 +480,9 @@ default
             integer count = llGetListLength(lBundles);
             iBundleIdx += 2;
             if (iBundleIdx < count) 
-            {
                 DoBundle();
-            } else {
+            else
+            {
                 // tell the shim to restore settings, set version, 
                 // remove the script pin, and delete himself.
                 string myversion = llList2String(llParseString2List(llGetObjectName(), [" - "], []), 1);
@@ -541,12 +500,8 @@ default
 
     changed(integer change) 
     {
-        if (change & CHANGED_INVENTORY) 
-        {// Resetting on inventory change ensures that the bundle list is
-            // kept current, and that the ~version card is re-read if it
-            // changes.
+        if (change & CHANGED_INVENTORY) // Resetting on inventory change ensures that the bundle list is kept current, and that the ~version card is re-read if it changes.
             llResetScript();
-        }
     }
 
     dataserver(key id, string data) 
@@ -557,12 +512,9 @@ default
             list nameparts = llParseString2List(llGetObjectName(), [" - "], []);
             integer length = llGetListLength(nameparts);
             if (length == 2) 
-            {
                 nameparts = llListReplaceList(nameparts, [data], 1, 1);
-            } else if (length == 1) 
-            {
+            else if (length == 1) 
                 nameparts += [data];
-            }
             llSetObjectName(llDumpList2String(nameparts, " - "));
         }
     }
